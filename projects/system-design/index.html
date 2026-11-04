@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>System Design War Arena</title>
+<link rel="stylesheet" href="../shared.css">
+</head>
+<body>
+<nav><div class="wrap"><span>📐 System Design</span><a href="../../index.html">← CRUD Tracker</a></div></nav>
+
+<header class="hero"><div class="wrap">
+  <h1>Campus Placement Drive Management System</h1>
+  <p>Design before you code: HLD, ER diagram, LLD with a live business-rule simulator, screens and the error matrix.</p>
+</div></header>
+
+<main class="wrap">
+
+  <section class="card">
+    <h2>🎯 Problem &amp; Requirements</h2>
+    <p class="muted">Placement teams juggle spreadsheets, emails and portals, causing duplicate data and missed deadlines. CPDMS gives one place to manage companies, drives and applications.</p>
+    <div class="tw"><table>
+      <tr><th>User</th><th>What they need to do</th></tr>
+      <tr><td>Placement Admin</td><td>Create companies, create drives, define eligibility, view applicants</td></tr>
+      <tr><td>Student</td><td>View drives, apply and track application status</td></tr>
+      <tr><td>Placement Team</td><td>Update selection outcomes and generate reports</td></tr>
+    </table></div>
+  </section>
+
+  <section class="card">
+    <h2>🏗️ HLD: High-Level Design</h2>
+    <p class="muted">What are the major parts and how do they communicate?</p>
+    <div class="box">Student / Admin Browser</div><div class="arrow">↓</div>
+    <div class="box">Web Application<small>dashboards, forms, lists, messages</small></div><div class="arrow">↓</div>
+    <div class="box">API Layer<small>receives requests, sends responses</small></div><div class="arrow">↓ ↓ ↓</div>
+    <div class="row3">
+      <div class="box">Auth</div>
+      <div class="box">Drive Service<small>create / list drives</small></div>
+      <div class="box">Application Service<small>apply / status</small></div>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="box">Database<small>students, companies, drives, applications</small></div>
+    <p class="muted" style="margin-top:10px">Optional: Email / Notification Service sends application status updates.</p>
+  </section>
+
+  <section class="card">
+    <h2>🗄️ ER Diagram</h2>
+    <p class="muted">Relationships: COMPANY 1—* PLACEMENT_DRIVE · STUDENT 1—* APPLICATION · PLACEMENT_DRIVE 1—* APPLICATION</p>
+    <div class="grid">
+      <div class="entity"><h4>COMPANY</h4><p>company_id (PK)</p><p>name</p><p>industry</p><p>website</p></div>
+      <div class="entity"><h4>PLACEMENT_DRIVE</h4><p>drive_id (PK)</p><p>company_id (FK)</p><p>role</p><p>package</p><p>deadline</p><p>min_cgpa</p></div>
+      <div class="entity"><h4>STUDENT</h4><p>student_id (PK)</p><p>name</p><p>email</p><p>branch</p><p>cgpa</p></div>
+      <div class="entity"><h4>APPLICATION</h4><p>application_id (PK)</p><p>student_id (FK)</p><p>drive_id (FK)</p><p>status</p><p>applied_at</p></div>
+    </div>
+    <p class="muted" style="margin-top:12px"><b>Business rule:</b> one student cannot apply twice for the same drive. Enforce it with a UNIQUE constraint on <code>(student_id, drive_id)</code>.</p>
+  </section>
+
+  <section class="card">
+    <h2>⚙️ LLD: API Contracts</h2>
+    <div class="tw"><table>
+      <tr><th>Action</th><th>Endpoint</th><th>Input</th><th>Output</th></tr>
+      <tr><td>Create Drive</td><td><code>POST /drives</code></td><td>companyId, role, package...</td><td>driveId + success</td></tr>
+      <tr><td>List Drives</td><td><code>GET /drives</code></td><td>optional filters</td><td>array of drives</td></tr>
+      <tr><td>Apply</td><td><code>POST /applications</code></td><td>studentId, driveId</td><td>applicationId + status</td></tr>
+      <tr><td>Update Status</td><td><code>PATCH /applications/:id</code></td><td>new status</td><td>updated application</td></tr>
+    </table></div>
+  </section>
+
+  <section class="card">
+    <h2>🧪 LLD Simulator: Apply to a Drive</h2>
+    <p class="muted">Change the inputs and press Apply. The checks run in the same order as the pseudo-code.</p>
+    <div class="grid">
+      <div><label>Student CGPA</label><input id="cgpa" type="number" step="0.1" value="7.5"></div>
+      <div><label>Drive minimum CGPA</label><input id="min" type="number" step="0.1" value="7.0"></div>
+      <div><label>Drive deadline</label><input id="deadline" type="date"></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="applied"> Student has already applied to this drive</label>
+    <button id="apply">Apply to Drive</button>
+    <p id="result" class="muted"></p>
+    <pre>function applyToDrive(studentId, driveId):
+  validate studentId, driveId
+  if student not found       -> ERROR "Student not found"
+  if drive not found         -> ERROR "Placement drive not found"
+  if today > drive.deadline  -> ERROR "Application deadline has passed"
+  if student.cgpa < minCgpa  -> ERROR "You do not meet eligibility criteria"
+  if already applied         -> ERROR "You have already applied"
+  create application (status = "Applied")
+  return SUCCESS "Application submitted successfully"</pre>
+  </section>
+
+  <section class="card">
+    <h2>🖼️ Screens &amp; States</h2>
+    <div class="tw"><table>
+      <tr><th>Screen</th><th>Purpose</th><th>Required states</th></tr>
+      <tr><td>1. Login / Access</td><td>Enter the system</td><td>Input + validation error</td></tr>
+      <tr><td>2. Admin Dashboard</td><td>View placement summary</td><td>Normal + empty/loading</td></tr>
+      <tr><td>3. Create Drive</td><td>Add an opportunity</td><td>Input + validation + success</td></tr>
+      <tr><td>4. Drive Listing</td><td>Browse opportunities</td><td>Data + no results</td></tr>
+      <tr><td>5. Apply Screen</td><td>Submit application</td><td>Confirmation + business-rule error</td></tr>
+      <tr><td>6. Application Status</td><td>Track outcome</td><td>Applied / Selected / Rejected</td></tr>
+    </table></div>
+    <pre style="margin-top:12px">+--------------------------------------------------+
+| SPSU CDC Admin Menu                              |
++--------------------------------------------------+
+| CREATE PLACEMENT DRIVE                           |
+| Company Name   [________________________]        |
+| Job Role       [________________________]        |
+| Package (LPA)  [________________________]        |
+| Minimum CGPA   [________________________]        |
+| Deadline       [____ / ____ / ________]          |
+|                                                  |
+| [ Cancel ]  [ Create Drive ]                     |
+| Success: ✓ Drive created successfully            |
+| Error:   ! Deadline must be a future date        |
++--------------------------------------------------+</pre>
+  </section>
+
+  <section class="card">
+    <h2>🔁 Input → Processing → Output → Error Matrix</h2>
+    <div class="tw"><table>
+      <tr><th>Feature</th><th>Input</th><th>Processing</th><th>Success</th><th>Error</th></tr>
+      <tr><td>Create Drive</td><td>Company, role, package, CGPA, deadline</td><td>Validate + save</td><td>Drive ID + confirmation</td><td>Field / business-rule message</td></tr>
+      <tr><td>Apply</td><td>Student ID + Drive ID</td><td>Check eligibility + duplicate</td><td>Application status</td><td>Not eligible / already applied</td></tr>
+      <tr><td>Update Status</td><td>Application ID + status</td><td>Validate transition</td><td>Updated status</td><td>Invalid status</td></tr>
+    </table></div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <a href="../../index.html">🏠 CRUD Tracker</a>
+  <a href="../devops/index.html">🚀 DevOps</a>
+  <a href="../api-testing/index.html">🧪 API Testing</a>
+  <a href="../system-design/index.html">📐 System Design</a><br>
+  <a href="https://github.com/Khuhsirox25" target="_blank" rel="noopener">GitHub</a>
+  <a href="https://www.linkedin.com/in/khushi-agarwal-5745a8314/" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="https://khuhsirox25.github.io/portfolio_new/" target="_blank" rel="noopener">Portfolio</a><br>
+  © 2026 Khushi Agarwal • SPSU Udaipur Championship
+</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// default deadline = 7 days from today
+const d = new Date(); d.setDate(d.getDate() + 7);
+$("deadline").value = d.toISOString().slice(0, 10);
+
+$("apply").addEventListener("click", () => {
+  const cgpa = parseFloat($("cgpa").value);
+  const min = parseFloat($("min").value);
+  const deadline = $("deadline").value;
+  const today = new Date().toISOString().slice(0, 10);
+  let msg, ok = false;
+
+  if (isNaN(cgpa) || cgpa < 0 || cgpa > 10) msg = "CGPA must be between 0 and 10.";
+  else if (isNaN(min) || min < 0 || min > 10) msg = "Minimum CGPA must be between 0 and 10.";
+  else if (!deadline) msg = "Deadline is required.";
+  else if (today > deadline) msg = "Application deadline has passed.";
+  else if (cgpa < min) msg = "You do not meet eligibility criteria.";
+  else if ($("applied").checked) msg = "You have already applied to this drive.";
+  else { msg = "Application submitted successfully (status: Applied)."; ok = true; }
+
+  $("result").className = ok ? "ok" : "bad";
+  $("result").textContent = (ok ? "✔ " : "✘ ") + msg;
+});
+</script>
+</body>
+</html>
