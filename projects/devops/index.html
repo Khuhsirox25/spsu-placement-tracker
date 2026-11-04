@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevOps & Deployment War Arena</title>
+<link rel="stylesheet" href="../shared.css">
+</head>
+<body>
+<nav><div class="wrap"><span>🚀 DevOps &amp; Deployment</span><a href="../../index.html">← CRUD Tracker</a></div></nav>
+
+<header class="hero"><div class="wrap">
+  <h1>From localhost to a live URL</h1>
+  <p>Run the Git workflow step by step, generate a professional README and track your delivery checklist.</p>
+</div></header>
+
+<main class="wrap">
+
+  <section class="card">
+    <h2>🖥️ Git Workflow Simulator</h2>
+    <p class="muted">Press the button to run each command in order and read what it does.</p>
+    <p class="muted"><b>Next command:</b> <code id="nextCmd"></code></p>
+    <p class="muted" id="why"></p>
+    <pre id="term">$ ready...</pre>
+    <button id="run">▶ Run next command</button>
+    <button class="alt" id="reset">↺ Reset</button>
+  </section>
+
+  <section class="card">
+    <h2>🌿 Branching Like a Team</h2>
+    <p class="muted">Risky work happens on a branch, never directly on <code>main</code>.</p>
+    <div class="row3">
+      <div class="box">main<small>production-ready code</small></div>
+      <div class="box">feature/add-validation<small>work in progress</small></div>
+      <div class="box">feature/improve-dashboard<small>work in progress</small></div>
+    </div>
+    <pre style="margin-top:12px">git checkout -b feature/add-validation
+git add .
+git commit -m "Add student validation to placement form"
+git push -u origin feature/add-validation
+# open a Pull Request on GitHub, review, then merge into main</pre>
+  </section>
+
+  <section class="card">
+    <h2>📝 README Generator</h2>
+    <div class="grid">
+      <div><label>Project name</label><input id="rn" value="SPSU Placement Tracker"></div>
+      <div><label>Author</label><input id="ra" value="Khushi Agarwal"></div>
+      <div><label>Live URL</label><input id="rl" placeholder="https://khuhsirox25.github.io/spsu-placement-tracker/"></div>
+    </div>
+    <label>Problem statement</label>
+    <input id="rp" value="A web application designed to manage placement-related student records.">
+    <button id="gen">Generate README.md</button>
+    <button class="alt" id="copy">Copy</button>
+    <pre id="readme">Press Generate...</pre>
+  </section>
+
+  <section class="card">
+    <h2>✅ Delivery Checklist</h2>
+    <div class="bar"><div id="fill"></div></div>
+    <p class="muted" id="pct">0% complete</p>
+    <div id="list"></div>
+  </section>
+
+  <section class="card">
+    <h2>🛠️ Troubleshooting Guide</h2>
+    <div class="tw"><table>
+      <tr><th>Problem</th><th>First thing to check</th></tr>
+      <tr><td>git command not recognized</td><td>Verify Git installation and restart the terminal</td></tr>
+      <tr><td>Push rejected</td><td>Check the remote repository and whether remote changes exist</td></tr>
+      <tr><td>Files missing on GitHub</td><td>Run <code>git status</code>, confirm files were added and committed</td></tr>
+      <tr><td>Live page is broken</td><td>Check the browser console and file paths</td></tr>
+      <tr><td>Deployment shows old version</td><td>Confirm the latest commit was pushed and deployment finished</td></tr>
+      <tr><td>API works locally but not live</td><td>Check endpoint configuration and network restrictions</td></tr>
+    </table></div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <a href="../../index.html">🏠 CRUD Tracker</a>
+  <a href="../devops/index.html">🚀 DevOps</a>
+  <a href="../api-testing/index.html">🧪 API Testing</a>
+  <a href="../system-design/index.html">📐 System Design</a><br>
+  <a href="https://github.com/Khuhsirox25" target="_blank" rel="noopener">GitHub</a>
+  <a href="https://www.linkedin.com/in/khushi-agarwal-5745a8314/" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="https://khuhsirox25.github.io/portfolio_new/" target="_blank" rel="noopener">Portfolio</a><br>
+  © 2026 Khushi Agarwal • SPSU Udaipur Championship
+</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+/* ---- Git simulator ---- */
+const steps = [
+  ["git init", "Creates a hidden .git folder. Your project now has version history.", "Initialized empty Git repository in spsu-placement-tracker/.git/"],
+  ["git status", "Shows which files are new or changed.", "Untracked files:\n  index.html\n  style.css\n  script.js\n  README.md"],
+  ["git add .", "Stages every file so it goes into the next commit.", "(no output) all files staged"],
+  ['git commit -m "Initial project setup"', "Saves a checkpoint with a meaningful message.", "[main (root-commit) a1b2c3d] Initial project setup\n 4 files changed"],
+  ["git branch -M main", "Renames your branch to main.", "(no output) branch is now main"],
+  ["git remote add origin https://github.com/Khuhsirox25/spsu-placement-tracker.git", "Connects your local project to the GitHub repository.", "(no output) remote 'origin' added"],
+  ["git push -u origin main", "Publishes your commits to GitHub.", "Enumerating objects: 6, done.\nTo github.com:Khuhsirox25/spsu-placement-tracker.git\n * [new branch]      main -> main"]
+];
+let idx = 0;
+
+function showNext() {
+  if (idx >= steps.length) {
+    $("nextCmd").textContent = "all done";
+    $("why").textContent = "🎉 Your code is on GitHub. Next: enable GitHub Pages (Settings → Pages → Branch: main) to get your live URL.";
+    $("run").disabled = true;
+    return;
+  }
+  $("nextCmd").textContent = steps[idx][0];
+  $("why").textContent = "💡 " + steps[idx][1];
+  $("run").disabled = false;
+}
+
+$("run").addEventListener("click", () => {
+  if (idx >= steps.length) return;
+  const s = steps[idx];
+  if ($("term").textContent === "$ ready...") $("term").textContent = "";
+  $("term").textContent += "$ " + s[0] + "\n" + s[2] + "\n\n";
+  $("term").scrollTop = $("term").scrollHeight;
+  idx++;
+  showNext();
+});
+
+$("reset").addEventListener("click", () => {
+  idx = 0;
+  $("term").textContent = "$ ready...";
+  showNext();
+});
+showNext();
+
+/* ---- README generator ---- */
+function buildReadme() {
+  const live = $("rl").value.trim();
+  return `# ${$("rn").value}
+
+## Problem Statement
+${$("rp").value}
+
+## Features
+- Create student records
+- View records
+- Update records
+- Delete records
+
+## Tech Stack
+HTML, CSS, JavaScript, Google Sheets and Google Apps Script
+
+## How to Run
+Open the project or visit the deployed application link.
+${live ? "\nLive demo: " + live + "\n" : ""}
+## Learning Outcomes
+CRUD operations, API communication, data handling and deployment.
+
+## Author
+${$("ra").value} | SPSU Udaipur Championship`;
+}
+
+$("gen").addEventListener("click", () => { $("readme").textContent = buildReadme(); });
+$("copy").addEventListener("click", async () => {
+  const text = $("readme").textContent.startsWith("Press") ? buildReadme() : $("readme").textContent;
+  $("readme").textContent = text;
+  try { await navigator.clipboard.writeText(text); $("copy").textContent = "Copied ✓"; }
+  catch (e) { $("copy").textContent = "Select text and copy manually"; }
+  setTimeout(() => $("copy").textContent = "Copy", 1800);
+});
+
+/* ---- Checklist ---- */
+const items = [
+  "Project cleaned and tested locally", "Git repository initialized", "GitHub repository created",
+  "Project pushed successfully", "Meaningful commits created", "Professional README added",
+  "Project deployed", "Live application tested", "Mobile experience checked",
+  "Screenshots captured", "LinkedIn proof-of-work post published"
+];
+$("list").innerHTML = items.map((t, i) =>
+  `<label class="chk"><input type="checkbox" data-i="${i}"> ${t}</label>`).join("");
+
+function updateBar() {
+  const boxes = document.querySelectorAll("#list input");
+  const done = [...boxes].filter(b => b.checked).length;
+  const pct = Math.round(done / boxes.length * 100);
+  $("fill").style.width = pct + "%";
+  $("pct").textContent = pct + "% complete (" + done + "/" + boxes.length + ")";
+}
+$("list").addEventListener("change", updateBar);
+updateBar();
+</script>
+</body>
+</html>
