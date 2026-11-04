@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPSU Student Placement Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <p class="eyebrow">SPSU UDAIPUR CHAMPIONSHIP • DAY 9</p>
+      <h1>Student Placement Tracker</h1>
+      <p>Complete CRUD Application using Google Sheets</p>
+    </header>
+
+    <section class="card">
+      <h2 id="formTitle">Add Student</h2>
+      <form id="studentForm">
+        <input type="hidden" id="studentId">
+        <div class="grid">
+          <div>
+            <label>Name</label>
+            <input type="text" id="name" required>
+          </div>
+          <div>
+            <label>Email</label>
+            <input type="email" id="email" required>
+          </div>
+          <div>
+            <label>Domain</label>
+            <select id="domain" required>
+              <option value="">Select Domain</option>
+              <option>Java Full Stack</option>
+              <option>Data Analytics</option>
+              <option>Python</option>
+              <option>Cloud</option>
+              <option>UI/UX</option>
+            </select>
+          </div>
+          <div>
+            <label>Placement Status</label>
+            <select id="status" required>
+              <option value="">Select Status</option>
+              <option>Learning</option>
+              <option>Interview Ready</option>
+              <option>Placed</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" id="submitBtn">Create Student</button>
+          <button type="button" class="secondary" onclick="resetForm()">
+            Cancel Edit
+          </button>
+        </div>
+      </form>
+      <p id="message"></p>
+    </section>
+
+    <section class="card">
+      <div class="tableHeader">
+        <h2>Student Records</h2>
+        <button onclick="loadStudents()">Refresh Data</button>
+      </div>
+      <div class="tableWrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Domain</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
