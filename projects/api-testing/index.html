@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API Testing War Arena</title>
+<link rel="stylesheet" href="../shared.css">
+</head>
+<body>
+<nav><div class="wrap"><span>🧪 API Testing (Postman)</span><a href="../../index.html">← CRUD Tracker</a></div></nav>
+
+<header class="hero"><div class="wrap">
+  <h1>Test an API like a QA engineer</h1>
+  <p>Send real GET, POST, PATCH and DELETE requests, inspect the response and watch automated assertions pass or fail.</p>
+</div></header>
+
+<main class="wrap">
+
+  <section class="card">
+    <h2>📮 Mini Postman</h2>
+    <p class="muted">Pick a preset or edit the request yourself. Uses the safe practice API <code>jsonplaceholder.typicode.com</code>.</p>
+    <button class="alt" data-p="0">GET all posts</button>
+    <button class="alt" data-p="1">POST create</button>
+    <button class="alt" data-p="2">PATCH update</button>
+    <button class="alt" data-p="3">DELETE</button>
+    <button class="alt" data-p="4">Negative: unknown ID</button>
+
+    <div class="grid" style="grid-template-columns:140px 1fr">
+      <div><label>Method</label>
+        <select id="method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option></select></div>
+      <div><label>URL</label><input id="url" value="https://jsonplaceholder.typicode.com/posts"></div>
+    </div>
+    <label>Body (JSON, used for POST / PUT / PATCH)</label>
+    <textarea id="body"></textarea>
+    <button id="send">▶ Send</button>
+
+    <p class="muted" style="margin-top:8px">
+      Status: <span id="status" class="tag">—</span> &nbsp;
+      Time: <b id="time">—</b>
+    </p>
+    <label>Response body</label>
+    <pre id="resp">Press Send...</pre>
+    <label>Automated tests</label>
+    <div id="tests" class="muted">No tests run yet.</div>
+  </section>
+
+  <section class="card">
+    <h2>📊 Status Codes You Must Know</h2>
+    <div class="tw"><table>
+      <tr><th>Code</th><th>Meaning</th><th>Testing interpretation</th></tr>
+      <tr><td><span class="tag s200">200</span></td><td>OK</td><td>Request succeeded</td></tr>
+      <tr><td><span class="tag s200">201</span></td><td>Created</td><td>New resource created successfully</td></tr>
+      <tr><td><span class="tag s400">400</span></td><td>Bad Request</td><td>Client sent invalid data</td></tr>
+      <tr><td><span class="tag s400">401</span></td><td>Unauthorized</td><td>Authentication required or invalid</td></tr>
+      <tr><td><span class="tag s400">403</span></td><td>Forbidden</td><td>User not allowed to perform the action</td></tr>
+      <tr><td><span class="tag s400">404</span></td><td>Not Found</td><td>Requested resource does not exist</td></tr>
+      <tr><td><span class="tag s400">500</span></td><td>Server Error</td><td>Unexpected server-side failure</td></tr>
+    </table></div>
+  </section>
+
+  <section class="card">
+    <h2>🧾 Test Pack Blueprint: Campus Placement Drive API</h2>
+    <div class="tw"><table>
+      <tr><th>Request</th><th>Method</th><th>What to test</th></tr>
+      <tr><td>List placement drives</td><td>GET</td><td>200, response structure, empty result</td></tr>
+      <tr><td>Get one drive</td><td>GET</td><td>200 for valid ID, 404 for invalid ID</td></tr>
+      <tr><td>Create application</td><td>POST</td><td>Valid body, required fields, duplicate application</td></tr>
+      <tr><td>Update application status</td><td>PATCH</td><td>Valid transition and invalid status</td></tr>
+      <tr><td>Delete test record</td><td>DELETE</td><td>Success response and missing resource behavior</td></tr>
+    </table></div>
+  </section>
+
+  <section class="card">
+    <h2>🚫 Negative Testing</h2>
+    <div class="tw"><table>
+      <tr><th>Scenario</th><th>Example</th><th>Expected</th></tr>
+      <tr><td>Missing field</td><td>POST without required value</td><td>400 + meaningful validation message</td></tr>
+      <tr><td>Invalid format</td><td>Malformed email</td><td>Validation error</td></tr>
+      <tr><td>Missing resource</td><td>GET unknown ID</td><td>404 + useful response</td></tr>
+      <tr><td>Duplicate action</td><td>Apply twice</td><td>Business-rule error</td></tr>
+      <tr><td>Unauthorized</td><td>No valid credentials</td><td>401 / 403 depending on design</td></tr>
+    </table></div>
+  </section>
+
+  <section class="card">
+    <h2>📋 API Test Case Template</h2>
+    <pre>TEST CASE ID:
+FEATURE:
+ENDPOINT:
+METHOD:
+PRE-CONDITION:
+REQUEST:
+  - URL:
+  - Headers:
+  - Parameters:
+  - Body:
+EXPECTED STATUS CODE:
+EXPECTED RESPONSE:
+TEST ASSERTIONS:
+  1.
+  2.
+  3.
+NEGATIVE TEST:
+ACTUAL RESULT:
+PASS / FAIL</pre>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <a href="../../index.html">🏠 CRUD Tracker</a>
+  <a href="../devops/index.html">🚀 DevOps</a>
+  <a href="../api-testing/index.html">🧪 API Testing</a>
+  <a href="../system-design/index.html">📐 System Design</a><br>
+  <a href="https://github.com/Khuhsirox25" target="_blank" rel="noopener">GitHub</a>
+  <a href="https://www.linkedin.com/in/khushi-agarwal-5745a8314/" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="https://khuhsirox25.github.io/portfolio_new/" target="_blank" rel="noopener">Portfolio</a><br>
+  © 2026 Khushi Agarwal • SPSU Udaipur Championship
+</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const BASE = "https://jsonplaceholder.typicode.com";
+
+const presets = [
+  { m: "GET",    u: BASE + "/posts", b: "" },
+  { m: "POST",   u: BASE + "/posts", b: JSON.stringify({ title: "SPSU Placement Application", body: "Student application created during API Testing War Arena", userId: 101 }, null, 2) },
+  { m: "PATCH",  u: BASE + "/posts/1", b: JSON.stringify({ title: "Updated Placement Application" }, null, 2) },
+  { m: "DELETE", u: BASE + "/posts/1", b: "" },
+  { m: "GET",    u: BASE + "/posts/99999", b: "" }
+];
+
+document.querySelectorAll("[data-p]").forEach(btn => btn.addEventListener("click", () => {
+  const p = presets[btn.dataset.p];
+  $("method").value = p.m; $("url").value = p.u; $("body").value = p.b;
+}));
+$("body").value = presets[0].b;
+
+function addTest(name, pass) {
+  const d = document.createElement("div");
+  d.className = pass ? "ok" : "bad";
+  d.textContent = (pass ? "✔ PASS  " : "✘ FAIL  ") + name;
+  $("tests").appendChild(d);
+}
+
+$("send").addEventListener("click", async () => {
+  const method = $("method").value, url = $("url").value.trim();
+  const opts = { method, headers: { "Content-Type": "application/json" } };
+  if (["POST", "PUT", "PATCH"].includes(method)) opts.body = $("body").value;
+
+  $("send").disabled = true;
+  $("resp").textContent = "Sending...";
+  $("tests").textContent = "";
+  const t = performance.now();
+
+  try {
+    const res = await fetch(url, opts);
+    const text = await res.text();
+    const ms = Math.round(performance.now() - t);
+
+    $("status").textContent = res.status + " " + (res.statusText || "");
+    $("status").className = "tag " + (res.ok ? "s200" : "s400");
+    $("time").textContent = ms + " ms";
+
+    let json = null;
+    try { json = JSON.parse(text); } catch (e) {}
+    $("resp").textContent = json !== null
+      ? JSON.stringify(json, null, 2).slice(0, 2500) + (text.length > 2500 ? "\n... (trimmed)" : "")
+      : text;
+
+    addTest("Status code is successful (200 or 201)", [200, 201].includes(res.status));
+    addTest("Response time is below 1000 ms", ms < 1000);
+    addTest("Response body is JSON", json !== null);
+    if (json !== null) {
+      const sample = Array.isArray(json) ? json[0] : json;
+      addTest("Response contains an id", !!sample && typeof sample === "object" && "id" in sample);
+    }
+    if (res.status === 404) addTest("Negative test: missing resource returns 404", true);
+  } catch (err) {
+    $("status").textContent = "Network error";
+    $("status").className = "tag s400";
+    $("resp").textContent = err.message;
+    addTest("Request reached the server", false);
+  } finally {
+    $("send").disabled = false;
+  }
+});
+</script>
+</body>
+</html>
