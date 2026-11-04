@@ -4,160 +4,143 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SPSU Student Placement Tracker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="blob blob1"></div>
-  <div class="blob blob2"></div>
 
-  <div class="container">
+  <div class="topbar">🏆 SPSU Udaipur Championship &nbsp;•&nbsp; Day 9 &nbsp;•&nbsp; Full CRUD with Google Sheets</div>
 
-    <!-- HERO -->
-    <header class="hero">
-      <p class="eyebrow">🎓 SPSU UDAIPUR CHAMPIONSHIP • DAY 9</p>
-      <h1>Student Placement <span class="gradText">Tracker</span></h1>
-      <p class="sub">Learn <b>CRUD</b> by doing it. Every click below talks to a real Google Sheet.</p>
-    </header>
-
-    <!-- CRUD TEACHING CARDS -->
-    <section class="crudGrid">
-      <article class="crudCard" id="crud-create">
-        <div class="crudIcon">➕</div>
-        <h3>C · Create</h3>
-        <p>Add a brand-new row to the sheet.</p>
-        <span class="tag">POST · action: create</span>
-      </article>
-      <article class="crudCard" id="crud-read">
-        <div class="crudIcon">👀</div>
-        <h3>R · Read</h3>
-        <p>Fetch all rows and show them.</p>
-        <span class="tag">GET · action=read</span>
-      </article>
-      <article class="crudCard" id="crud-update">
-        <div class="crudIcon">✏️</div>
-        <h3>U · Update</h3>
-        <p>Change an existing row using its ID.</p>
-        <span class="tag">POST · action: update</span>
-      </article>
-      <article class="crudCard" id="crud-delete">
-        <div class="crudIcon">🗑️</div>
-        <h3>D · Delete</h3>
-        <p>Remove a row permanently by ID.</p>
-        <span class="tag">POST · action: delete</span>
-      </article>
-    </section>
-
-    <!-- STATS (derived from READ) -->
-    <section class="stats">
-      <div class="stat"><span class="statIcon">👥</span><div><h4 id="statTotal">0</h4><p>Total Students</p></div></div>
-      <div class="stat"><span class="statIcon">📚</span><div><h4 id="statLearning">0</h4><p>Learning</p></div></div>
-      <div class="stat"><span class="statIcon">🎯</span><div><h4 id="statReady">0</h4><p>Interview Ready</p></div></div>
-      <div class="stat"><span class="statIcon">🏆</span><div><h4 id="statPlaced">0</h4><p>Placed</p></div></div>
-    </section>
-
-    <div class="layout">
-
-      <!-- FORM -->
-      <section class="card formCard" id="formCard">
-        <div class="cardHead">
-          <h2 id="formTitle">Add Student</h2>
-          <span class="modeBadge" id="modeBadge">CREATE MODE</span>
-        </div>
-        <p class="hint" id="modeHint">Fill the form and press Create. This sends a <b>POST</b> request with <code>action: "create"</code>.</p>
-
-        <form id="studentForm">
-          <input type="hidden" id="studentId">
-
-          <label for="name">👤 Name</label>
-          <input type="text" id="name" placeholder="e.g. Aarav Sharma" required>
-
-          <label for="email">📧 Email</label>
-          <input type="email" id="email" placeholder="aarav@example.com" required>
-
-          <label for="domain">💻 Domain</label>
-          <select id="domain" required>
-            <option value="">Select Domain</option>
-            <option>Java Full Stack</option>
-            <option>Data Analytics</option>
-            <option>Python</option>
-            <option>Cloud</option>
-            <option>UI/UX</option>
-          </select>
-
-          <label for="status">🚦 Placement Status</label>
-          <select id="status" required>
-            <option value="">Select Status</option>
-            <option>Learning</option>
-            <option>Interview Ready</option>
-            <option>Placed</option>
-          </select>
-
-          <div class="actions">
-            <button type="submit" id="submitBtn" class="btn primary">Create Student</button>
-            <button type="button" id="cancelBtn" class="btn ghost">Cancel Edit</button>
-          </div>
-        </form>
-        <p id="message"></p>
-      </section>
-
-      <!-- INSPECTOR -->
-      <section class="card inspector">
-        <div class="cardHead">
-          <h2>🔍 Live API Inspector</h2>
-          <span class="pulse">● LIVE</span>
-        </div>
-        <p class="hint">This is what really travels between your browser and Google Sheets.</p>
-
-        <div class="inspRow"><span>Operation</span><b id="inspOp">—</b></div>
-        <div class="inspRow"><span>HTTP Method</span><b id="inspMethod">—</b></div>
-        <div class="inspRow"><span>Time taken</span><b id="inspTime">—</b></div>
-
-        <p class="inspLabel">📤 Request</p>
-        <pre id="inspReq">Do something (add, edit, delete, refresh) and the request appears here.</pre>
-
-        <p class="inspLabel">📥 Response</p>
-        <pre id="inspRes">Waiting...</pre>
-      </section>
+  <nav class="navbar">
+    <div class="wrap navInner">
+      <a href="#home" class="brand"><span class="logo">🎓</span><span>SPSU<b> Placements</b></span></a>
+      <div class="navLinks">
+        <a href="#home">Home</a>
+        <a href="#learn">Learn CRUD</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#records">Records</a>
+      </div>
+      <a href="#dashboard" class="btn primary small">+ Add Student</a>
     </div>
+  </nav>
 
-    <!-- TABLE -->
-    <section class="card">
-      <div class="tableHeader">
-        <h2>📋 Student Records</h2>
-        <button class="btn primary" id="refreshBtn">🔄 Refresh Data</button>
-      </div>
-
-      <div class="toolbar">
-        <input type="search" id="searchInput" placeholder="🔎 Search by name, email or domain...">
-        <div class="chips" id="chips">
-          <button class="chip active" data-filter="All">All</button>
-          <button class="chip" data-filter="Learning">Learning</button>
-          <button class="chip" data-filter="Interview Ready">Interview Ready</button>
-          <button class="chip" data-filter="Placed">Placed</button>
+  <header class="hero" id="home">
+    <div class="wrap heroInner">
+      <div class="heroText">
+        <span class="badge">🚀 Placement Management System</span>
+        <h1>Track student placements. <span class="grad">Learn CRUD</span> while you do it.</h1>
+        <p>A live web app connected to Google Sheets. Every click you make is a real <b>Create, Read, Update or Delete</b> operation, and you can watch the actual request and response.</p>
+        <div class="heroBtns">
+          <a href="#dashboard" class="btn light">Open Dashboard →</a>
+          <a href="#learn" class="btn outline">How CRUD works</a>
         </div>
       </div>
+      <div class="heroArt">
+        <div class="flow">
+          <div class="flowItem">🌐 <b>Browser</b><small>HTML · CSS · JS</small></div>
+          <div class="arrow">⇄ fetch()</div>
+          <div class="flowItem">⚙️ <b>Apps Script</b><small>Web API</small></div>
+          <div class="arrow">⇄ read / write</div>
+          <div class="flowItem">📗 <b>Google Sheet</b><small>Database</small></div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-      <div class="tableWrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Student</th>
-              <th>Domain</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="studentTableBody"></tbody>
-        </table>
+  <main class="wrap">
+
+    <section id="learn" class="section">
+      <div class="secHead"><span class="kicker">LEARN</span><h2>The four CRUD operations</h2><p>Every app you use is built on these four actions. They light up below as you use them.</p></div>
+      <div class="crudGrid">
+        <article class="crudCard c1" id="crud-create"><div class="crudIcon">➕</div><h3>Create</h3><p>Add a new row to the sheet.</p><code>POST · action: create</code></article>
+        <article class="crudCard c2" id="crud-read"><div class="crudIcon">👀</div><h3>Read</h3><p>Fetch rows and display them.</p><code>GET · action=read</code></article>
+        <article class="crudCard c3" id="crud-update"><div class="crudIcon">✏️</div><h3>Update</h3><p>Change a row found by its ID.</p><code>POST · action: update</code></article>
+        <article class="crudCard c4" id="crud-delete"><div class="crudIcon">🗑️</div><h3>Delete</h3><p>Remove a row by its ID.</p><code>POST · action: delete</code></article>
       </div>
     </section>
 
-    <footer>Made with 💙 for SPSU Udaipur • Frontend + Google Apps Script + Google Sheets</footer>
-  </div>
+    <section id="dashboard" class="section">
+      <div class="secHead"><span class="kicker">DASHBOARD</span><h2>Manage students</h2><p>Use the form, then watch the Inspector show what was sent to Google Sheets.</p></div>
 
-  <!-- DELETE DIALOG -->
+      <div class="stats">
+        <div class="stat"><span class="statIcon bg1">👥</span><div><h4 id="statTotal">0</h4><p>Total Students</p></div></div>
+        <div class="stat"><span class="statIcon bg2">📚</span><div><h4 id="statLearning">0</h4><p>Learning</p></div></div>
+        <div class="stat"><span class="statIcon bg3">🎯</span><div><h4 id="statReady">0</h4><p>Interview Ready</p></div></div>
+        <div class="stat"><span class="statIcon bg4">🏆</span><div><h4 id="statPlaced">0</h4><p>Placed</p></div></div>
+      </div>
+
+      <div class="layout">
+        <div class="card formCard" id="formCard">
+          <div class="cardHead"><h3 id="formTitle">Add Student</h3><span class="modeBadge" id="modeBadge">CREATE MODE</span></div>
+          <p class="hint" id="modeHint">Fill the form and press Create. This sends a <b>POST</b> with <code>action: "create"</code>.</p>
+          <form id="studentForm">
+            <input type="hidden" id="studentId">
+            <div class="two">
+              <div><label for="name">👤 Full Name</label><input type="text" id="name" placeholder="Aarav Sharma" required></div>
+              <div><label for="email">📧 Email</label><input type="email" id="email" placeholder="aarav@example.com" required></div>
+              <div><label for="domain">💻 Domain</label>
+                <select id="domain" required><option value="">Select Domain</option><option>Java Full Stack</option><option>Data Analytics</option><option>Python</option><option>Cloud</option><option>UI/UX</option></select></div>
+              <div><label for="status">🚦 Status</label>
+                <select id="status" required><option value="">Select Status</option><option>Learning</option><option>Interview Ready</option><option>Placed</option></select></div>
+            </div>
+            <div class="actions">
+              <button type="submit" id="submitBtn" class="btn primary">Create Student</button>
+              <button type="button" id="cancelBtn" class="btn ghost">Cancel Edit</button>
+            </div>
+          </form>
+          <p id="message"></p>
+        </div>
+
+        <div class="card inspector">
+          <div class="cardHead"><h3>🔍 Live API Inspector</h3><span class="live">● LIVE</span></div>
+          <p class="hint">What actually travels between your browser and Google Sheets.</p>
+          <div class="inspRow"><span>Operation</span><b id="inspOp">—</b></div>
+          <div class="inspRow"><span>HTTP Method</span><b id="inspMethod">—</b></div>
+          <div class="inspRow"><span>Time taken</span><b id="inspTime">—</b></div>
+          <p class="inspLabel">📤 Request</p>
+          <pre id="inspReq">Add, edit, delete or refresh to see the request.</pre>
+          <p class="inspLabel">📥 Response</p>
+          <pre id="inspRes">Waiting...</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="records" class="section">
+      <div class="secHead"><span class="kicker">RECORDS</span><h2>Student records</h2><p>This table is the <b>Read</b> operation. Search and filters work on data already loaded.</p></div>
+      <div class="card">
+        <div class="toolbar">
+          <input type="search" id="searchInput" placeholder="🔎 Search name, email or domain...">
+          <div class="chips" id="chips">
+            <button class="chip active" data-filter="All">All</button>
+            <button class="chip" data-filter="Learning">Learning</button>
+            <button class="chip" data-filter="Interview Ready">Interview Ready</button>
+            <button class="chip" data-filter="Placed">Placed</button>
+          </div>
+          <button class="btn primary small" id="refreshBtn">🔄 Refresh</button>
+        </div>
+        <div class="tableWrapper">
+          <table>
+            <thead><tr><th>Student</th><th>Domain</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="studentTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footGrid">
+      <div>
+        <a href="#home" class="brand light"><span class="logo">🎓</span><span>SPSU<b> Placements</b></span></a>
+        <p class="footAbout">A teaching project that demonstrates full CRUD operations using HTML, CSS, JavaScript, Google Apps Script and Google Sheets.</p>
+      </div>
+      <div><h5>Quick Links</h5><a href="#home">Home</a><a href="#learn">Learn CRUD</a><a href="#dashboard">Dashboard</a><a href="#records">Records</a></div>
+      <div><h5>CRUD</h5><a href="#learn">➕ Create</a><a href="#learn">👀 Read</a><a href="#learn">✏️ Update</a><a href="#learn">🗑️ Delete</a></div>
+      <div><h5>Tech Stack</h5><span>🌐 HTML5</span><span>🎨 CSS3</span><span>⚡ JavaScript</span><span>📗 Google Sheets API</span></div>
+    </div>
+    <div class="footBottom">© 2026 SPSU Udaipur • Championship Day 9 • Built with 💙 for learning</div>
+  </footer>
+
   <div class="modalBack" id="modalBack">
     <div class="modal">
       <div class="modalIcon">🗑️</div>
@@ -169,8 +152,8 @@
       </div>
     </div>
   </div>
-
   <div class="toast" id="toast"></div>
+
   <script src="script.js"></script>
 </body>
 </html>
