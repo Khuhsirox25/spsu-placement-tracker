@@ -4,71 +4,146 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SPSU Student Placement Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+
   <div class="container">
-    <header>
-      <p class="eyebrow">SPSU UDAIPUR CHAMPIONSHIP • DAY 9</p>
-      <h1>Student Placement Tracker</h1>
-      <p>Complete CRUD Application using Google Sheets</p>
+
+    <!-- HERO -->
+    <header class="hero">
+      <p class="eyebrow">🎓 SPSU UDAIPUR CHAMPIONSHIP • DAY 9</p>
+      <h1>Student Placement <span class="gradText">Tracker</span></h1>
+      <p class="sub">Learn <b>CRUD</b> by doing it. Every click below talks to a real Google Sheet.</p>
     </header>
 
-    <section class="card">
-      <h2 id="formTitle">Add Student</h2>
-      <form id="studentForm">
-        <input type="hidden" id="studentId">
-        <div class="grid">
-          <div>
-            <label>Name</label>
-            <input type="text" id="name" required>
-          </div>
-          <div>
-            <label>Email</label>
-            <input type="email" id="email" required>
-          </div>
-          <div>
-            <label>Domain</label>
-            <select id="domain" required>
-              <option value="">Select Domain</option>
-              <option>Java Full Stack</option>
-              <option>Data Analytics</option>
-              <option>Python</option>
-              <option>Cloud</option>
-              <option>UI/UX</option>
-            </select>
-          </div>
-          <div>
-            <label>Placement Status</label>
-            <select id="status" required>
-              <option value="">Select Status</option>
-              <option>Learning</option>
-              <option>Interview Ready</option>
-              <option>Placed</option>
-            </select>
-          </div>
-        </div>
-        <div class="actions">
-          <button type="submit" id="submitBtn">Create Student</button>
-          <button type="button" class="secondary" onclick="resetForm()">
-            Cancel Edit
-          </button>
-        </div>
-      </form>
-      <p id="message"></p>
+    <!-- CRUD TEACHING CARDS -->
+    <section class="crudGrid">
+      <article class="crudCard" id="crud-create">
+        <div class="crudIcon">➕</div>
+        <h3>C · Create</h3>
+        <p>Add a brand-new row to the sheet.</p>
+        <span class="tag">POST · action: create</span>
+      </article>
+      <article class="crudCard" id="crud-read">
+        <div class="crudIcon">👀</div>
+        <h3>R · Read</h3>
+        <p>Fetch all rows and show them.</p>
+        <span class="tag">GET · action=read</span>
+      </article>
+      <article class="crudCard" id="crud-update">
+        <div class="crudIcon">✏️</div>
+        <h3>U · Update</h3>
+        <p>Change an existing row using its ID.</p>
+        <span class="tag">POST · action: update</span>
+      </article>
+      <article class="crudCard" id="crud-delete">
+        <div class="crudIcon">🗑️</div>
+        <h3>D · Delete</h3>
+        <p>Remove a row permanently by ID.</p>
+        <span class="tag">POST · action: delete</span>
+      </article>
     </section>
 
+    <!-- STATS (derived from READ) -->
+    <section class="stats">
+      <div class="stat"><span class="statIcon">👥</span><div><h4 id="statTotal">0</h4><p>Total Students</p></div></div>
+      <div class="stat"><span class="statIcon">📚</span><div><h4 id="statLearning">0</h4><p>Learning</p></div></div>
+      <div class="stat"><span class="statIcon">🎯</span><div><h4 id="statReady">0</h4><p>Interview Ready</p></div></div>
+      <div class="stat"><span class="statIcon">🏆</span><div><h4 id="statPlaced">0</h4><p>Placed</p></div></div>
+    </section>
+
+    <div class="layout">
+
+      <!-- FORM -->
+      <section class="card formCard" id="formCard">
+        <div class="cardHead">
+          <h2 id="formTitle">Add Student</h2>
+          <span class="modeBadge" id="modeBadge">CREATE MODE</span>
+        </div>
+        <p class="hint" id="modeHint">Fill the form and press Create. This sends a <b>POST</b> request with <code>action: "create"</code>.</p>
+
+        <form id="studentForm">
+          <input type="hidden" id="studentId">
+
+          <label for="name">👤 Name</label>
+          <input type="text" id="name" placeholder="e.g. Aarav Sharma" required>
+
+          <label for="email">📧 Email</label>
+          <input type="email" id="email" placeholder="aarav@example.com" required>
+
+          <label for="domain">💻 Domain</label>
+          <select id="domain" required>
+            <option value="">Select Domain</option>
+            <option>Java Full Stack</option>
+            <option>Data Analytics</option>
+            <option>Python</option>
+            <option>Cloud</option>
+            <option>UI/UX</option>
+          </select>
+
+          <label for="status">🚦 Placement Status</label>
+          <select id="status" required>
+            <option value="">Select Status</option>
+            <option>Learning</option>
+            <option>Interview Ready</option>
+            <option>Placed</option>
+          </select>
+
+          <div class="actions">
+            <button type="submit" id="submitBtn" class="btn primary">Create Student</button>
+            <button type="button" id="cancelBtn" class="btn ghost">Cancel Edit</button>
+          </div>
+        </form>
+        <p id="message"></p>
+      </section>
+
+      <!-- INSPECTOR -->
+      <section class="card inspector">
+        <div class="cardHead">
+          <h2>🔍 Live API Inspector</h2>
+          <span class="pulse">● LIVE</span>
+        </div>
+        <p class="hint">This is what really travels between your browser and Google Sheets.</p>
+
+        <div class="inspRow"><span>Operation</span><b id="inspOp">—</b></div>
+        <div class="inspRow"><span>HTTP Method</span><b id="inspMethod">—</b></div>
+        <div class="inspRow"><span>Time taken</span><b id="inspTime">—</b></div>
+
+        <p class="inspLabel">📤 Request</p>
+        <pre id="inspReq">Do something (add, edit, delete, refresh) and the request appears here.</pre>
+
+        <p class="inspLabel">📥 Response</p>
+        <pre id="inspRes">Waiting...</pre>
+      </section>
+    </div>
+
+    <!-- TABLE -->
     <section class="card">
       <div class="tableHeader">
-        <h2>Student Records</h2>
-        <button onclick="loadStudents()">Refresh Data</button>
+        <h2>📋 Student Records</h2>
+        <button class="btn primary" id="refreshBtn">🔄 Refresh Data</button>
       </div>
+
+      <div class="toolbar">
+        <input type="search" id="searchInput" placeholder="🔎 Search by name, email or domain...">
+        <div class="chips" id="chips">
+          <button class="chip active" data-filter="All">All</button>
+          <button class="chip" data-filter="Learning">Learning</button>
+          <button class="chip" data-filter="Interview Ready">Interview Ready</button>
+          <button class="chip" data-filter="Placed">Placed</button>
+        </div>
+      </div>
+
       <div class="tableWrapper">
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
+              <th>Student</th>
               <th>Domain</th>
               <th>Status</th>
               <th>Actions</th>
@@ -78,7 +153,24 @@
         </table>
       </div>
     </section>
+
+    <footer>Made with 💙 for SPSU Udaipur • Frontend + Google Apps Script + Google Sheets</footer>
   </div>
+
+  <!-- DELETE DIALOG -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <div class="modalIcon">🗑️</div>
+      <h3>Delete this student?</h3>
+      <p id="modalText">This permanently removes the row from your Google Sheet.</p>
+      <div class="actions center">
+        <button class="btn ghost" id="modalCancel">Keep it</button>
+        <button class="btn danger" id="modalConfirm">Yes, delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
   <script src="script.js"></script>
 </body>
 </html>
